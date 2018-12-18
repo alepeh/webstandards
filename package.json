@@ -1,0 +1,14 @@
+{
+  "name": "webstandards",
+  "version": "0.0.1",
+  "description": "VanillaJS apps",
+  "scripts": {
+    "serve": "browser-sync src -f src --cors --no-notify",
+    "cypress:open": "cypress open"
+  },
+  "author": "Alexander Pehm",
+  "devDependencies": {
+    "browser-sync": "^2.26.3",
+    "cypress": "^3.1.3"
+  }
+}

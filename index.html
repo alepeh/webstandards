@@ -1,0 +1,29 @@
+<html>
+<head>
+  <title>Alex's VanillaJS playground</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <main>
+    <header>
+      <h2>VanillaJS playground</h2>
+    </header>
+    <nav>
+      <vanilla-nav>
+        <a href="#Home">Home</a><br/>
+        <a href="#Login">Login</a><br/>
+        <a href="#Object">List Objects</a><br/>
+        <a href="#Configuration">Configuration</a>
+        <div id="user">Not logged in!</div>
+      </vanilla-nav>
+    </nav>
+    <article>
+      <vanilla-slot>
+          
+      </vanilla-slot>
+    </article>
+    <footer><small>© Alexander Pehm</small></footer>
+  </main>
+  <script src="app.js" type="module"></script>
+</body>
+</html>
