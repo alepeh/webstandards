@@ -3,17 +3,18 @@
   "version": "0.0.1",
   "description": "VanillaJS apps",
   "scripts": {
-    "serve": "browser-sync src -f src --cors --no-notify",
+    "serve": "./buildRollup.sh && 'browser-sync dist -f dist --cors --no-notify --port 8000'",
     "cypress:open": "cypress open",
-    "start": "node server.js"
+    "cypress:run": "cypress run --browser chrome --no-exit"
   },
-  "main": "server.js",
   "author": "Alexander Pehm",
   "dependencies": {
-    "express": "^4.6.14"
+    "hyperhtml": "^2.23.0"
   },
   "devDependencies": {
     "browser-sync": "^2.26.3",
-    "cypress": "^3.1.3"
+    "cypress": "^3.1.3",
+    "rollup-plugin-browsersync": "^0.2.6",
+    "rollup-plugin-node-resolve": "^4.0.0"
   }
 }

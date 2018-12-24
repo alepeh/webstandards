@@ -1,18 +1,32 @@
+import hyperHTML from 'hyperhtml';
+
 export default class ObjectView extends HTMLElement {
     
     constructor() {
         super();
-        this.root = this.attachShadow({ mode: 'open' });
         this.APIKEY = localStorage.getItem("apikey")
         this.API_BASE_PATH = localStorage.getItem("apiurl");
+        this.name = 'World';
+        this.resources = [];
+        this.html = hyperHTML.bind(
+            this.attachShadow({ mode: 'open' })
+        );
     }
 
     connectedCallback() {
-        this.root.innerHTML = `
-            <h3>Objects</h3>
-            `;
         let cookie = document.cookie.split(';').filter((item) => item.includes('token='));
         this.fetchObjects(cookie[0].substring("token=".length));
+        this.render();
+    }
+
+    render(){
+        return this.html`
+        <div> Resource list: </div>
+        <p></p>${this.resources.map(
+          resource => hyperHTML.wire(resource)`
+          <div>name: <span> ${resource.name} </span></div>
+          <p></p>`
+        )}`;
     }
 
     fetchObjects(token) {
@@ -23,8 +37,7 @@ export default class ObjectView extends HTMLElement {
                 "X-DreamFactory-API-Key": this.APIKEY
             }
         })
-            .then(
-                function (response) {
+            .then((response) => {
                     if (response.status !== 200) {
                         console.log('Looks like there was a problem. Status Code: ' +
                             response.status);
@@ -32,9 +45,11 @@ export default class ObjectView extends HTMLElement {
                     }
 
                     // Examine the text in the response
-                    response.json().then(function (data) {
+                    response.json().then((data) => {
+                        this.resources = data.resource;
+                        this.render();
                         console.log(data);
-                    });
+                    }).catch(error => console.error('Error:', error));
                 }
             )
             .catch(function (err) {
