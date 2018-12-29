@@ -72,6 +72,16 @@ export default class ApiClient {
             });
     }
 
+    fetchResources() {
+        return fetch(this.API_BASE_PATH+'/AWS_RDS1/_schema', {
+            mode: "cors",
+            headers: {
+                "X-DreamFactory-Session-Token": this.getSessionTokenFromCookie(),
+                "X-DreamFactory-API-Key": this.APIKEY
+            }
+        })
+    }
+
     saveSessionTokenInCookie(sessionToken){
         let d = new Date();
         d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000));
