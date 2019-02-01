@@ -32,6 +32,10 @@ footer {
     grid-area: footer;
 }
 
-.active-link{
+.active-link {
     background: lightcoral;
+}
+
+.completed {
+    background: lightcoral; 
 }

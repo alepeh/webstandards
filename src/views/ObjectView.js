@@ -1,5 +1,5 @@
 import ApiClient from '../services/ApiClient.js';
-import hyperHTML from 'hyperhtml';
+import {html, render} from 'lit-html';
 
 export default class ObjectView extends HTMLElement {
     
@@ -7,9 +7,7 @@ export default class ObjectView extends HTMLElement {
         super();
         this.apiClient = new ApiClient();
         this.resources = [];
-        this.html = hyperHTML.bind(
-            this.attachShadow({ mode: 'open' })
-        );
+        this.root = this.attachShadow({ mode: 'open' });
     }
 
     connectedCallback() {
@@ -18,12 +16,16 @@ export default class ObjectView extends HTMLElement {
     }
 
     render(){
-        return this.html`
-        <div> Resource list: </div>
-        <p></p>${this.resources.map(
-          resource => hyperHTML.wire(resource)`
+        render(this.template(), this.root);
+    }
+
+    template(){
+        return html`
+        <div>Available resources</div>
+        ${this.resources.map(
+          (resource) => html`
           <div>name: <span> ${resource.name} </span></div>
-          <p></p>`
+          `
         )}`;
     }
 

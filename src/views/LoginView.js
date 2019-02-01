@@ -11,9 +11,13 @@ export default class LoginView extends HTMLElement {
     connectedCallback() {
         this.root.innerHTML = `
             <h3>Login</h3>
-            <input type="text" id="username"/>
-            <input type="password" id="password"/>
-            <button>Login</button>
+            <form>
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username"/><br/>
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password"/>
+                <button>Login</button>
+            </form>
             `;
         this.usernameInput = this.root.querySelector('#username');
         this.passwordInput = this.root.querySelector('#password');

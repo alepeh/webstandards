@@ -32,6 +32,7 @@ export default class VanillaSlot extends HTMLElement {
             if (this.oldChild){
                 this.root.replaceChild(newChild, this.oldChild);
             } else {
+                console.log("First navigation event");
                 this.root.appendChild(newChild);
             }
         } else {

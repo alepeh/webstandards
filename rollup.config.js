@@ -1,5 +1,7 @@
 import resolve from 'rollup-plugin-node-resolve';
 import browsersync from 'rollup-plugin-browsersync';
+import common from 'rollup-plugin-commonjs';
+
 
 const views = ['ConfigurationView', 'HomeView', 'LoginView', 'ObjectView'].map(view => `src/views/${view}.js`);
 
@@ -23,8 +25,8 @@ export default [{
             cors: true,
             notify: false
         }),
-        resolve({
-        })
+        resolve(),
+        common()
       ]
     }
 ]
