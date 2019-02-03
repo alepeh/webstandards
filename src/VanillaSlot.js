@@ -1,4 +1,3 @@
-import ApiClient from './services/ApiClient.js';
 
 export default class VanillaSlot extends HTMLElement {
 
@@ -6,7 +5,6 @@ export default class VanillaSlot extends HTMLElement {
         super();
         this.oldChild = null;
         this.root = this.attachShadow({mode: 'open'});
-        //this.apiClient = new ApiClient();
     }
 
     connectedCallback(){
@@ -14,21 +12,19 @@ export default class VanillaSlot extends HTMLElement {
         document.addEventListener('vanilla-loggedin', e => {
             this.loadView('Home');
         });
-        //this.apiClient.refreshSessionToken();
     }
 
     onNavigation(evt){
         const { detail } = evt;
-        const { hash:linkName } = detail;
-        this.loadView(linkName);
+        this.loadView(detail.request);
     }
 
-    async loadView(linkName) {
-        const {default: View} = await import(`./views/${linkName}View.js`);
+    async loadView(request) {
+        const {default: View} = await import(`./views/${request.resource}View.js`);
         
         let newChild;
         if (View.prototype instanceof HTMLElement){
-            newChild = new View();
+            newChild = new View(request);
             if (this.oldChild){
                 this.root.replaceChild(newChild, this.oldChild);
             } else {

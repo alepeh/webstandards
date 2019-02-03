@@ -27,18 +27,36 @@ export default class VanillaNav extends HTMLElement {
 
     onAddressBarChanged(evt){
         const { location } = window;
-        const { href } = location;
         const { hash } = location;
+
+        const request = this.parseUrl();
         const event = new CustomEvent('vanilla-nav', {
             detail : {
-                href: href,
-                hash: hash.substring(1),
+                request
             },
             bubbles: true
         });
         this.dispatchEvent(event);
         const element = this.querySelector(`[href="${hash}"]`);
         this.onLinkClicked({target: element});
+    }
+
+    parseUrl(){
+        const { location } = window;
+
+        let url = location.hash.slice(1).toLowerCase() || '/';
+        let r = url.split("/")
+        let request = {
+            route       : null,
+            resource    : null,
+            id          : null,
+            verb        : null
+        }
+        request.resource    = r[1]
+        request.id          = r[2]
+        request.verb        = r[3]
+        request.route = (request.resource ? '/' + request.resource : '/') + (request.id ? '/:id' : '') + (request.verb ? '/' + request.verb : '');
+        return request;
     }
 
     onLinkClicked(evt) { 
