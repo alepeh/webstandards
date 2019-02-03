@@ -1,0 +1,10 @@
+* Development Notes
+** 2019-02-02 REST API
+the backend uses dreamfactory, here is a list of important paths.
+*** Root path 
+=https://<df-host>/api/v2/<service-name>=
+*** List all tables (assuming it is a DB service)
+=GET /_schema=
+*** Describe a single table
+=GET /_schema/{table_name}=
+
