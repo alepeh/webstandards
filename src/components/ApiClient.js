@@ -1,3 +1,5 @@
+import * as token from "./Token";
+
 export default class ApiClient {
     
     constructor(){
@@ -11,7 +13,7 @@ export default class ApiClient {
             mode: "cors",
             headers: {
                 "Content-type": "application/json; charset=UTF-8",
-                "X-DreamFactory-Session-Token": this.getSessionTokenFromCookie()
+                "X-DreamFactory-Session-Token": token.getSessionTokenFromCookie()
             }
         }).then((response) => {
                     if (response.status === 401) {
@@ -27,7 +29,7 @@ export default class ApiClient {
                     }
                     response.json().then((data) => {
                         console.dir(data);
-                        this.saveSessionTokenInCookie(data.session_token);
+                        token.saveSessionTokenInCookie(data.session_token);
                         const event = new CustomEvent('vanilla-loggedin', {
                             bubbles: true,
                             detail: data
@@ -59,7 +61,7 @@ export default class ApiClient {
                         return;
                     }
                     response.json().then((data) => {
-                        this.saveSessionTokenInCookie(data.session_token);                   
+                        token.saveSessionTokenInCookie(data.session_token);                   
                         const event = new CustomEvent('vanilla-loggedin', {
                             detail: data,
                             bubbles: true
@@ -76,25 +78,9 @@ export default class ApiClient {
         return fetch(this.API_BASE_PATH+'/AWS_RDS1/_schema', {
             mode: "cors",
             headers: {
-                "X-DreamFactory-Session-Token": this.getSessionTokenFromCookie(),
+                "X-DreamFactory-Session-Token": token.getSessionTokenFromCookie(),
                 "X-DreamFactory-API-Key": this.APIKEY
             }
         })
-    }
-
-    saveSessionTokenInCookie(sessionToken){
-        let d = new Date();
-        d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000));
-        let expires = "expires=" + d.toUTCString();
-        console.log("Session Token: " + sessionToken);
-        document.cookie = "token=" + sessionToken + ";" + expires;
-    }
-
-    getSessionTokenFromCookie(){
-        if (!document.cookie){
-            return;
-        }
-        let cookie = document.cookie.split(';').filter((item) => item.includes('token='));
-        return cookie[0].substring("token=".length);
     }
 }

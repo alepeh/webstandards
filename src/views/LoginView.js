@@ -1,4 +1,4 @@
-import ApiClient from '../services/ApiClient.js';
+import ApiClient from '../components/ApiClient.js';
 
 export default class LoginView extends HTMLElement {
 

@@ -1,4 +1,4 @@
-import ApiClient from '../services/ApiClient.js';
+import ApiClient from '../components/ApiClient.js';
 import {html, render} from 'lit-html';
 
 export default class TableView extends HTMLElement {
