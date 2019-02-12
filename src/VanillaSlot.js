@@ -10,8 +10,9 @@ export default class VanillaSlot extends HTMLElement {
     connectedCallback(){
         document.addEventListener('vanilla-nav', e => this.onNavigation(e));
         document.addEventListener('vanilla-loggedin', e => {
-            this.loadView('Home');
+            this.loadView({resource: 'Home'});
         });
+        
     }
 
     onNavigation(evt){
@@ -21,7 +22,6 @@ export default class VanillaSlot extends HTMLElement {
 
     async loadView(request) {
         const {default: View} = await import(`./views/${request.resource}View.js`);
-        
         let newChild;
         if (View.prototype instanceof HTMLElement){
             newChild = new View(request);

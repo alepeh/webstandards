@@ -8,3 +8,7 @@ the backend uses dreamfactory, here is a list of important paths.
 *** Describe a single table
 =GET /_schema/{table_name}=
 
+## JWT time to live in minutes
+#DF_JWT_TTL=60
+## Refresh time to live in minutes, defaults to 2 weeks
+#DF_JWT_REFRESH_TTL=20160

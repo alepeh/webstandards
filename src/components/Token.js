@@ -1,17 +1,27 @@
 function saveSessionTokenInCookie(sessionToken){
     let d = new Date();
-    d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000));
-    let expires = "expires=" + d.toUTCString();
-    document.cookie = "token=" + sessionToken + ";" + expires;
+    d.setTime(d.getTime() + (60 * 60 * 1000));
+    document.cookie = "token=" + sessionToken;
+    document.cookie = "expires=" + d.getTime();
 }
 
 function getSessionTokenFromCookie(){
-    console.log(document.cookie);
-    if (!document.cookie){
+    if (document.cookie === ""){
         return null;
     }
     let cookie = document.cookie.split(';').filter((item) => item.includes('token='));
-    return cookie[0].substring("token=".length);
+    return cookie[0].trim().substring("token=".length);
 }
 
-export { saveSessionTokenInCookie, getSessionTokenFromCookie}
+function isSessionTokenExpired(){
+    if (getSessionTokenFromCookie() === null){
+        return true;
+    }
+    const currentTimeUTC = new Date().getTime();
+    let expiryStringInCookie = document.cookie.split(';').filter((item) => item.includes('expires='));
+    let expiryTimeInCookie = expiryStringInCookie[0].trim().substring("expires=".length)
+    const expiryTimeUTC = new Date().setTime(expiryTimeInCookie);
+    return (expiryTimeUTC > currentTimeUTC) ? false : true;
+}
+
+export { saveSessionTokenInCookie, getSessionTokenFromCookie, isSessionTokenExpired}

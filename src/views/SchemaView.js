@@ -31,17 +31,10 @@ export default class ObjectView extends HTMLElement {
 
     getResources(){
         this.apiClient.fetchResources()
-            .then((response) => {
-                if (response.status !== 200) {
-                    console.log('Looks like there was a problem. Status Code: ' +
-                        response.status);
-                    return;
-                }
-                response.json().then((data) => {
-                    this.resources = data.resource;
-                    this.render();
-                    console.log(data);
-                }).catch(error => console.error('Error:', error));
+            .then((data) => {
+                this.resources = data.resource;
+                this.render();
+                console.dir(data);
             }
         )
         .catch(function (err) {
