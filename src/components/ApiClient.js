@@ -79,15 +79,29 @@ export default class ApiClient {
     refreshTokenIfRequired(){
         if(token.isSessionTokenExpired()){
             console.log("Session Token is expired - trying to refresh")
-            this.refreshSessionToken();
+            return this.refreshSessionToken();
+        } else {
+            console.log("Session Token still valid")
+            return Promise.resolve();
         }
-        console.log("Session Token still valid")
-        return Promise.resolve();
     }
 
     async fetchResources() {
         await this.refreshTokenIfRequired();
         return fetch(this.API_BASE_PATH + '/AWS_RDS1/_schema', {
+            mode: "cors",
+            headers: {
+                "X-DreamFactory-Session-Token": token.getSessionTokenFromCookie(),
+                "X-DreamFactory-API-Key": this.APIKEY
+            }
+        })
+        .then(this.status)
+        .then(this.json)
+    }
+
+    async fetchResource(name) {
+        await this.refreshTokenIfRequired();
+        return fetch(this.API_BASE_PATH + '/AWS_RDS1/_schema/' + name, {
             mode: "cors",
             headers: {
                 "X-DreamFactory-Session-Token": token.getSessionTokenFromCookie(),

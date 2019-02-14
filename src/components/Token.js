@@ -14,11 +14,11 @@ function getSessionTokenFromCookie(){
 }
 
 function isSessionTokenExpired(){
-    if (getSessionTokenFromCookie() === null){
-        return true;
-    }
     const currentTimeUTC = new Date().getTime();
     let expiryStringInCookie = document.cookie.split(';').filter((item) => item.includes('expires='));
+    if (expiryStringInCookie == ""){
+        return true;
+    }
     let expiryTimeInCookie = expiryStringInCookie[0].trim().substring("expires=".length)
     const expiryTimeUTC = new Date().setTime(expiryTimeInCookie);
     return (expiryTimeUTC > currentTimeUTC) ? false : true;
