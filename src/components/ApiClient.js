@@ -99,9 +99,22 @@ export default class ApiClient {
         .then(this.json)
     }
 
-    async fetchResource(name) {
+    async fetchResourceSchema(name) {
         await this.refreshTokenIfRequired();
         return fetch(this.API_BASE_PATH + '/AWS_RDS1/_schema/' + name, {
+            mode: "cors",
+            headers: {
+                "X-DreamFactory-Session-Token": token.getSessionTokenFromCookie(),
+                "X-DreamFactory-API-Key": this.APIKEY
+            }
+        })
+        .then(this.status)
+        .then(this.json)
+    }
+
+    async fetchResourceData(name) {
+        await this.refreshTokenIfRequired();
+        return fetch(this.API_BASE_PATH + '/AWS_RDS1/_table/' + name, {
             mode: "cors",
             headers: {
                 "X-DreamFactory-Session-Token": token.getSessionTokenFromCookie(),
