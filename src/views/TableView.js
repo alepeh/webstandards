@@ -37,6 +37,7 @@ export default class TableView extends HTMLElement {
         <div>Schema</div>
         <table border="1">
         <tr>
+        <th>ACTION</th>
         ${this.schema.field.map(
           (resource) => html`
           <th>${resource.name}</th>
@@ -46,6 +47,7 @@ export default class TableView extends HTMLElement {
         ${this.data.resource.map(
             (resource) => html`
             <tr>
+            <td><button @click=${_ => this.onAction('view',resource)}>View</button></td>
             ${Object.values(resource).map(
                 (row) => html`
                 <td>${row}</td>
@@ -55,6 +57,20 @@ export default class TableView extends HTMLElement {
           )}
           </table>
         `;
+    }
+
+    onAction(action, payload){
+        const event = new CustomEvent('vanilla-nav', {
+            detail : {
+                request : {
+                    resource: 'Item',
+                    verb: action,
+                    payload: payload
+                }
+            },
+            bubbles: true
+        });
+        document.dispatchEvent(event);
     }
 }
 customElements.define('table-view', TableView);
