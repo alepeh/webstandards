@@ -5,7 +5,7 @@
   "scripts": {
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --browser chrome --no-exit",
-    "serve": "./buildRollup.sh && 'browser-sync dist -f dist --cors --no-notify --port 8000'",
+    "serve": "./buildRollup.dv.sh && 'browser-sync dist -f dist --cors --no-notify --port 8000'",
     "server": "node server.js",
     "test": "jest --watch"
   },
@@ -17,7 +17,6 @@
   "devDependencies": {
     "@babel/preset-env": "^7.3.1",
     "browser-sync": "^2.26.3",
-    "cypress": "^3.1.3",
     "jest": "^24.1.0",
     "rollup-plugin-browsersync": "^0.2.6",
     "rollup-plugin-commonjs": "^9.2.0",

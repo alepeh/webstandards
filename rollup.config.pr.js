@@ -1,5 +1,4 @@
 import resolve from 'rollup-plugin-node-resolve';
-import browsersync from 'rollup-plugin-browsersync';
 import common from 'rollup-plugin-commonjs';
 
 
@@ -20,12 +19,6 @@ export default [{
         },
     experimentalCodeSplitting: true,
     plugins: [
-        browsersync({server: 'dist',
-            port: 8000,
-            cors: true,
-            notify: false,
-            open: false
-        }),
         resolve(),
         common()
       ]
