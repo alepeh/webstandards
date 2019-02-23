@@ -3,7 +3,7 @@ import browsersync from 'rollup-plugin-browsersync';
 import common from 'rollup-plugin-commonjs';
 
 
-const views = ['ConfigurationView', 'HomeView', 'LoginView', 'SchemaView', 'TableView', 'ItemView'].map(view => `src/views/${view}.js`);
+const views = ['ConfigurationView', 'HomeView', 'SchemaView', 'TableView', 'ItemView'].map(view => `src/views/${view}.js`);
 
 export default [{
     input: 'src/app.js',

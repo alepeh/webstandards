@@ -14,11 +14,6 @@ export default class VanillaNav extends HTMLElement {
             const { name } = e.detail;
             this.querySelector("div").innerHTML = `Logged in as ${name}`;
         });
-        document.addEventListener('vanilla-loggedout', e => {
-            console.log("LoggedOut event")
-            this.querySelector("div").innerHTML = `Not logged in!`;
-            window.location.hash = "#/Login";
-        });
     }
 
     registerListener(e){

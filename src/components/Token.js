@@ -10,7 +10,10 @@ function getSessionTokenFromCookie(){
         return null;
     }
     let cookie = document.cookie.split(';').filter((item) => item.includes('token='));
-    return cookie[0].trim().substring("token=".length);
+    if(cookie.length != 0) {
+        return cookie[0].trim().substring("token=".length);
+    }
+    return null;
 }
 
 function isSessionTokenExpired(){

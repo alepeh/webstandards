@@ -9,10 +9,6 @@ export default class VanillaSlot extends HTMLElement {
 
     connectedCallback(){
         document.addEventListener('vanilla-nav', e => this.onNavigation(e));
-        document.addEventListener('vanilla-loggedin', e => {
-            this.loadView({resource: 'Home'});
-        });
-        
     }
 
     onNavigation(evt){

@@ -7,13 +7,13 @@
   <main>
     <header>
       <h2>webstandards playground</h2>
+      <button class="trigger">Login</button>
     </header>
     <nav>
       <vanilla-nav>
         <a href="#/Home">Home</a><br/>
         <a href="#/Schema">List Schemas</a><br/>
         <a href="#/Configuration">Configuration</a><br/>
-        <a href="#/Login">Login</a><br/>
         <div id="user">Not logged in!</div>
       </vanilla-nav>
     </nav>
@@ -24,6 +24,17 @@
     </article>
     <footer><small>© Alexander Pehm</small></footer>
   </main>
+  <cabin-login class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <h3>Login</h3>
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username"/><br/>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password"/>
+        <button>Login</button>
+    </div>
+  </cabin-login>
   <script src="app.js" type="module"></script>
 </body>
 </html>
