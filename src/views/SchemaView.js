@@ -24,7 +24,7 @@ export default class ObjectView extends HTMLElement {
         <div>Available resources</div>
         ${this.resources.map(
           (resource) => html`
-          <div>name: <a href="#/Table/${resource.name}">${resource.name}</a></div>
+          <div><a href="#/Table/${resource.name}">${resource.name}</a></div>
           `
         )}`;
     }

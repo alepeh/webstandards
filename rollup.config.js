@@ -2,20 +2,11 @@ import resolve from 'rollup-plugin-node-resolve';
 import browsersync from 'rollup-plugin-browsersync';
 import common from 'rollup-plugin-commonjs';
 
-
-const views = ['ConfigurationView', 'HomeView', 'SchemaView', 'TableView', 'ItemView'].map(view => `src/views/${view}.js`);
-
 export default [{
     input: 'src/app.js',
-    output: {
-      file: 'dist/app.js',
-      format: 'esm'
-    }
-  }, {
-    input: views,
     output: 
       {
-        dir: 'dist/views',
+        dir: 'dist/app.js',
         format: 'esm'
         },
     experimentalCodeSplitting: true,

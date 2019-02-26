@@ -1,10 +1,21 @@
 
+import SchemaView from './views/SchemaView';
+import TableView from './views/TableView';
+import ConfigurationView from './views/ConfigurationView';
+import HomeView from './views/HomeView';
+
 export default class VanillaSlot extends HTMLElement {
 
     constructor(){
         super();
         this.oldChild = null;
         this.root = this.attachShadow({mode: 'open'});
+        this.views = {
+            'Home' : HomeView,
+            'Schema' : SchemaView,
+            'Table' : TableView,
+            'Configuration' : ConfigurationView
+        }
     }
 
     connectedCallback(){
@@ -16,8 +27,8 @@ export default class VanillaSlot extends HTMLElement {
         this.loadView(detail.request);
     }
 
-    async loadView(request) {
-        const {default: View} = await import(`./views/${request.resource}View.js`);
+    loadView(request) {
+        const View = this.views[request.resource];
         let newChild;
         if (View.prototype instanceof HTMLElement){
             newChild = new View(request);
