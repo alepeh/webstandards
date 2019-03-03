@@ -1,23 +1,17 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>webtandards playground</title>
+  <title>webstandards playground</title>
   <link rel="stylesheet" href="style.css"/>
+  </script>
 </head>
 <body>
-  <main>
+  <main id="content">
     <header>
-      <h2>webstandards playground</h2>
-      <button class="trigger">Login</button>
+      <h2><span class="openNav">&nbsp;&#9776;</span> webstandards playground</h2>
     </header>
-    <nav>
-      <vanilla-nav>
-        <a href="#/Home">Home</a><br/>
-        <a href="#/Schema">List Schemas</a><br/>
-        <a href="#/Configuration">Configuration</a><br/>
-        <div id="user">Not logged in!</div>
-      </vanilla-nav>
-    </nav>
+    <vanilla-nav></vanilla-nav>
+    <nav-view></nav-view>
     <article>
       <vanilla-slot>
           

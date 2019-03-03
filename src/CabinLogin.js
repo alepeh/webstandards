@@ -11,9 +11,7 @@ export default class CabinLogin extends HTMLElement {
         this.usernameInput = this.querySelector('#username');
         this.passwordInput = this.querySelector('#password');
         this.modal = document.querySelector(".modal");
-        this.trigger = document.querySelector(".trigger");
         this.closeButton = document.querySelector(".close-button");
-        this.trigger.addEventListener("click", _ => this.toggleModal());
         this.closeButton.addEventListener("click", _ => this.toggleModal());
 
         window.addEventListener("click", e => {

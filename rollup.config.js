@@ -6,13 +6,13 @@ export default [{
     input: 'src/app.js',
     output: 
       {
-        dir: 'dist/app.js',
+        file: 'dist/app.js',
         format: 'esm'
         },
     experimentalCodeSplitting: true,
     plugins: [
         browsersync({server: 'dist',
-            port: 8000,
+            port: 7000,
             cors: true,
             notify: false,
             open: false

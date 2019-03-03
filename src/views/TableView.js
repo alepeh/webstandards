@@ -13,6 +13,7 @@ export default class TableView extends HTMLElement {
     }
 
     connectedCallback(){
+        console.log("table view connected");
         this.getResource(this.request.id);
     }
 

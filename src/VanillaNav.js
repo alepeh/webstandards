@@ -6,22 +6,15 @@ export default class VanillaNav extends HTMLElement {
     }
 
     connectedCallback(){
-        this.activeLinkClass = 'active-link';
-        const links = this.querySelectorAll("a");
-        console.log(links);
-        links.forEach(e => this.registerListener(e));
+        window.onhashchange = evt => this.onAddressBarChanged(evt);
         document.addEventListener('vanilla-loggedin', e => {
             const { name } = e.detail;
             this.querySelector("div").innerHTML = `Logged in as ${name}`;
         });
     }
 
-    registerListener(e){
-        e.onclick = evt => this.onLinkClicked(evt);
-        window.onhashchange = evt => this.onAddressBarChanged(evt);
-    }
-
     onAddressBarChanged(evt){
+        console.log("Addressbar changed");
         const { location } = window;
         const { hash } = location;
 
@@ -33,8 +26,6 @@ export default class VanillaNav extends HTMLElement {
             bubbles: true
         });
         this.dispatchEvent(event);
-        const element = this.querySelector(`[href="${hash}"]`);
-        this.onLinkClicked({target: element});
     }
 
     parseUrl(){
@@ -53,15 +44,6 @@ export default class VanillaNav extends HTMLElement {
         request.verb        = r[3]
         request.route = (request.resource ? '/' + request.resource : '/') + (request.id ? '/:id' : '') + (request.verb ? '/' + request.verb : '');
         return request;
-    }
-
-    onLinkClicked(evt) { 
-        const { target } = evt;
-        if (this.activeLink) { 
-            this.activeLink.classList.toggle(this.activeLinkClass);
-        }
-        this.activeLink = target;
-        this.activeLink.classList.toggle(this.activeLinkClass);
     }
 }
 customElements.define('vanilla-nav', VanillaNav);

@@ -5,7 +5,7 @@
   "scripts": {
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --browser chrome --no-exit",
-    "serve": "./buildRollup.dv.sh && 'browser-sync dist -f dist --cors --no-notify --port 8000'",
+    "serve": "./buildRollup.dv.sh && 'browser-sync dist -f dist --cors --no-notify --port 7000'",
     "server": "node server.js",
     "test": "jest --watch"
   },
