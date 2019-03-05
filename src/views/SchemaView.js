@@ -21,12 +21,29 @@ export default class ObjectView extends HTMLElement {
 
     template(){
         return html`
-        <div>Available resources</div>
+        <style>
+         a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            text-transform: capitalize;
+            font-size: 1em;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+          }  
+         a:hover {
+            color: #f1f1f1;
+          }
+        </style>
         ${this.resources.map(
           (resource) => html`
-          <div><a href="#/Table/${resource.name}">${resource.name}</a></div>
+          <div><a href="#/Table/${resource.name}">${this.capitalize(resource.name)}</a></div>
           `
         )}`;
+    }
+
+    capitalize(text){
+        return text.replace(/_/g, ' ').toLowerCase();
     }
 
     getResources(){
