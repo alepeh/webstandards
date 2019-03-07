@@ -1,6 +1,7 @@
 body {
     padding: 0px;
     margin: 0px;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 main {
@@ -15,7 +16,6 @@ main {
 }
 
 header {
-    background-color: #111; /* Black*/
     color: #818181;
     grid-area: header;
 }
@@ -85,10 +85,11 @@ footer {
     z-index: 1; /* Stay on top */
     top: 0; /* Stay at the top */
     left: 0;
-    background-color: #111; /* Black*/
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 60px; /* Place content 60px from the top */
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+    border-right: 1px solid;
+    border-right-color: #818181;
   }
     
   /* Position and style the close button (top right corner) */
@@ -98,6 +99,8 @@ footer {
     right: 25px;
     font-size: 36px;
     margin-left: 50px;
+    color: #818181;
+    text-decoration: none;
   }
   
   /* Style page content - use this if you want to push the page content to the right when you open the side navigation */

@@ -35,8 +35,17 @@ export default class TableView extends HTMLElement {
 
     template(){
         return html`
-        <div>Schema</div>
-        <table border="1">
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+
+            td, th {
+                border: 1px solid #818181;
+                padding: 8px;
+            }
+        </style>
+        <table>
         <tr>
         <th>ACTION</th>
         ${this.schema.field.map(
