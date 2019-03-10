@@ -49,15 +49,15 @@ export default class TableView extends HTMLElement {
         <tr>
         <th>ACTION</th>
         ${this.schema.field.map(
-          (resource) => html`
-          <th>${resource.name}</th>
+          (field) => html`
+          <th>${field.name}</th>
           `
         )}
         </tr>
         ${this.data.resource.map(
             (resource) => html`
             <tr>
-            <td><button @click=${_ => this.onAction('view',resource)}>View</button></td>
+            <td><button @click=${_ => this.onAction('edit',{ fields: this.schema.field, data: resource})}>&#9998;</button></td>
             ${Object.values(resource).map(
                 (row) => html`
                 <td>${row}</td>
