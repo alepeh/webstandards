@@ -140,4 +140,20 @@ export default class ApiClient {
         .then(this.status)
         .then(this.json)
     }
+
+    async add(resourceName, data) {
+        await this.refreshTokenIfRequired();
+        return fetch(this.API_BASE_PATH + '/AWS_RDS1/_table/' + resourceName, {
+            method: "POST",
+            mode: "cors",
+            headers: {
+                "X-DreamFactory-Session-Token": token.getSessionTokenFromCookie(),
+                "X-DreamFactory-API-Key": this.APIKEY,
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(this.status)
+        .then(this.json)
+    }
 }

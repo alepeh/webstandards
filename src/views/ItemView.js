@@ -11,6 +11,7 @@ export default class ItemView extends HTMLElement {
         this.data = request.payload.data;
         this.changedData = {};
         this.resource = request.id;
+        this.verb = request.verb;
     }
 
     connectedCallback(){
@@ -30,11 +31,11 @@ export default class ItemView extends HTMLElement {
         }
         </style>
         <table>
-        ${Object.keys(this.data).map(
+        ${this.fields.map(
             (row) => html`
             <tr>
             <td>${row}</td>
-            <td><input .value=${this.data[row]} @change=${e => this.inputChanged(e,row)}></input></td>
+            <td><input .value=${this.data ? this.data[row] : ''} @change=${e => this.inputChanged(e,row)}></input></td>
             </tr>
           `
         )}
@@ -44,7 +45,17 @@ export default class ItemView extends HTMLElement {
     }
 
     save(){
-        this.apiClient.partialUpdate(this.resource, this.data['ID'], this.changedData);
+        if(this.verb === 'edit'){
+            console.log('edit');
+            this.apiClient.partialUpdate(this.resource, this.data['ID'], this.changedData);
+        }
+        else if(this.verb === 'add'){
+            console.log('add');
+            let newRecord = {"resource" : [
+                this.changedData
+            ]};
+            this.apiClient.add(this.resource, newRecord);
+        }
     }
 
     inputChanged(e,field){

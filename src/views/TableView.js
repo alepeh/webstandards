@@ -44,10 +44,13 @@ export default class TableView extends HTMLElement {
                 border: 1px solid #818181;
                 padding: 8px;
             }
+            #add {
+                font-size: 2em
+            }
         </style>
+        <button id="add" @click=${_ => this.onAction('add',{ fields: this.mapFieldNames()})}>+</button>
         <table>
         <tr>
-        <th>ACTION</th>
         ${this.schema.field.map(
           (field) => html`
           <th>${field.name}</th>
@@ -56,8 +59,7 @@ export default class TableView extends HTMLElement {
         </tr>
         ${this.data.resource.map(
             (resource) => html`
-            <tr>
-            <td><button @click=${_ => this.onAction('edit',{ fields: this.schema.field, data: resource})}>&#9998;</button></td>
+            <tr @click=${_ => this.onAction('edit',{ fields: this.mapFieldNames(), data: resource})}>
             ${Object.values(resource).map(
                 (row) => html`
                 <td>${row}</td>
@@ -82,6 +84,14 @@ export default class TableView extends HTMLElement {
             bubbles: true
         });
         document.dispatchEvent(event);
+    }
+
+    mapFieldNames(){
+        let fieldNames = this.schema.field.map(field => {
+            return (field.name,field.name);
+        })
+        console.dir(this.schema.field);
+        return fieldNames;
     }
 }
 customElements.define('table-view', TableView);
