@@ -124,4 +124,20 @@ export default class ApiClient {
         .then(this.status)
         .then(this.json)
     }
+
+    async partialUpdate(resourceName, id, changedData) {
+        await this.refreshTokenIfRequired();
+        return fetch(this.API_BASE_PATH + '/AWS_RDS1/_table/' + resourceName + '/' + id, {
+            method: "PATCH",
+            mode: "cors",
+            headers: {
+                "X-DreamFactory-Session-Token": token.getSessionTokenFromCookie(),
+                "X-DreamFactory-API-Key": this.APIKEY,
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify(changedData)
+        })
+        .then(this.status)
+        .then(this.json)
+    }
 }

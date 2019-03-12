@@ -74,6 +74,7 @@ export default class TableView extends HTMLElement {
             detail : {
                 request : {
                     resource: 'Item',
+                    id: this.request.id,
                     verb: action,
                     payload: payload
                 }

@@ -1,12 +1,16 @@
+import ApiClient from '../components/ApiClient.js';
 import {html, render} from 'lit-html';
 
 export default class ItemView extends HTMLElement {
 
     constructor(request) {
         super();
+        this.apiClient = new ApiClient();
         this.fields = request.payload.fields;
         this.root = this.attachShadow({ mode: 'open' });
         this.data = request.payload.data;
+        this.changedData = {};
+        this.resource = request.id;
     }
 
     connectedCallback(){
@@ -40,12 +44,11 @@ export default class ItemView extends HTMLElement {
     }
 
     save(){
-        console.log(this.data);
+        this.apiClient.partialUpdate(this.resource, this.data['ID'], this.changedData);
     }
 
     inputChanged(e,field){
-        console.dir(e);
-        console.log(field);
+        this.changedData[field] = e.target.value;
     }
 }
 customElements.define('item-view', ItemView);
