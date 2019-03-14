@@ -1,7 +1,6 @@
 
 import SchemaView from './views/SchemaView';
 import TableView from './views/TableView';
-import ConfigurationView from './views/ConfigurationView';
 import HomeView from './views/HomeView';
 import ItemView from './views/ItemView';
 
@@ -16,7 +15,6 @@ export default class VanillaSlot extends HTMLElement {
             'Home' : HomeView,
             'Schema' : SchemaView,
             'Table' : TableView,
-            'Configuration' : ConfigurationView,
             'Item' : ItemView
         }
     }
@@ -26,6 +24,7 @@ export default class VanillaSlot extends HTMLElement {
     }
 
     onNavigation(evt){
+        console.log("onNav fired");
         const { detail } = evt;
         console.dir(detail);
         this.loadView(detail.request);

@@ -1,10 +1,9 @@
-import ApiClient from './components/ApiClient.js';
+import apiClient from './components/ApiClientFactory.js';
  
 export default class CabinLogin extends HTMLElement {
 
     constructor(){
         super();
-        this.apiClient = new ApiClient();
     }
 
     connectedCallback(){
@@ -29,7 +28,9 @@ export default class CabinLogin extends HTMLElement {
     }
 
     login(){
-        this.apiClient.login(this.usernameInput.value, this.passwordInput.value);
+        apiClient().then(client => {
+            client.login(this.usernameInput.value, this.passwordInput.value);
+        });
     }
 
     toggleModal() {

@@ -1,11 +1,10 @@
-import ApiClient from '../components/ApiClient.js';
+import apiClient from '../components/ApiClientFactory.js';
 import {html, render} from 'lit-html';
 
 export default class ItemView extends HTMLElement {
 
     constructor(request) {
         super();
-        this.apiClient = new ApiClient();
         this.fields = request.payload.fields;
         this.root = this.attachShadow({ mode: 'open' });
         this.data = request.payload.data;
@@ -47,14 +46,18 @@ export default class ItemView extends HTMLElement {
     save(){
         if(this.verb === 'edit'){
             console.log('edit');
-            this.apiClient.partialUpdate(this.resource, this.data['ID'], this.changedData);
+            apiClient().then(client => {
+                client.partialUpdate(this.resource, this.data['ID'], this.changedData);
+            });
         }
         else if(this.verb === 'add'){
             console.log('add');
             let newRecord = {"resource" : [
                 this.changedData
             ]};
-            this.apiClient.add(this.resource, newRecord);
+            apiClient().then(client => {
+                client.add(this.resource, newRecord);
+            });
         }
     }
 

@@ -1,4 +1,4 @@
-import ApiClient from '../components/ApiClient.js';
+import apiClient from '../components/ApiClientFactory.js';
 import {html, render} from 'lit-html';
 
 export default class TableView extends HTMLElement {
@@ -6,14 +6,13 @@ export default class TableView extends HTMLElement {
     constructor(request) {
         super();
         this.request = request;
-        this.apiClient = new ApiClient();
+        this.apiClient =  apiClient();
         this.root = this.attachShadow({ mode: 'open' });
         this.schema;
         this.data;
     }
 
     connectedCallback(){
-        console.log("table view connected");
         this.getResource(this.request.id);
     }
 
@@ -22,15 +21,19 @@ export default class TableView extends HTMLElement {
     }
 
     async getResource(name){
-        await this.apiClient.fetchResourceSchema(name)
-        .then((schema) => {
-            this.schema = schema;
-        });
-        await this.apiClient.fetchResourceData(name)
-        .then((data) => {
-            this.data = data;
-            this.render();
-        });
+        await apiClient().then(client => {
+            client.fetchResourceSchema(name)
+            .then((schema) => {
+                this.schema = schema;
+            });
+        })
+        await apiClient().then(client => {
+            client.fetchResourceData(name)
+            .then((data) => {
+                this.data = data;
+                this.render();
+            });
+        })
     }
 
     template(){

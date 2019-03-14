@@ -6,18 +6,14 @@ export default class VanillaNav extends HTMLElement {
     }
 
     connectedCallback(){
-        window.onhashchange = evt => this.onAddressBarChanged(evt);
-        document.addEventListener('vanilla-loggedin', e => {
-            const { name } = e.detail;
-            this.querySelector("div").innerHTML = `Logged in as ${name}`;
-        });
+        //react to hash-change events once the element is upgraded
+        window.onhashchange = _ => this.onAddressBarChanged();
+        //wait for the main content element to be upgraded and let it display what is currently there
+        window.customElements.whenDefined('vanilla-slot').then(_ => this.onAddressBarChanged());
     }
 
-    onAddressBarChanged(evt){
+    onAddressBarChanged(){
         console.log("Addressbar changed");
-        const { location } = window;
-        const { hash } = location;
-
         const request = this.parseUrl();
         const event = new CustomEvent('vanilla-nav', {
             detail : {

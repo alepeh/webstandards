@@ -2,9 +2,9 @@ import * as token from "./Token";
 
 export default class ApiClient {
 
-    constructor() {
-        this.APIKEY = localStorage.getItem("apikey")
-        this.API_BASE_PATH = localStorage.getItem("apiurl");
+    constructor(apikey, apiBasePath) {
+        this.APIKEY =  apikey;
+        this.API_BASE_PATH = apiBasePath;
     }
 
     login(user, pass) {

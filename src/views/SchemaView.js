@@ -1,11 +1,10 @@
-import ApiClient from '../components/ApiClient.js';
+import apiClient from '../components/ApiClientFactory.js';
 import {html, render} from 'lit-html';
 
 export default class ObjectView extends HTMLElement {
     
     constructor() {
         super();
-        this.apiClient = new ApiClient();
         this.resources = [];
         this.root = this.attachShadow({ mode: 'open' });
     }
@@ -13,6 +12,7 @@ export default class ObjectView extends HTMLElement {
     connectedCallback() {
         this.getResources();
         this.render();
+        document.addEventListener('vanilla-loggedin', _ => this.getResources());
     }
 
     render(){
@@ -47,13 +47,15 @@ export default class ObjectView extends HTMLElement {
     }
 
     getResources(){
-        this.apiClient.fetchResources()
+        apiClient().then(client => {
+            client.fetchResources()
             .then((data) => {
                 this.resources = data.resource;
                 this.render();
                 console.dir(data);
             }
         )
+        })
         .catch(function (err) {
             console.log('Fetch Error :-S', err);
         });
