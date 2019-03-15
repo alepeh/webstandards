@@ -22,7 +22,7 @@ export default class NavView extends HTMLElement {
         return html`
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" @click="${_ => this.closeNav()}">&times;</a>
-            <object-view/>
+            <object-view>Loading...</object-view>
         </div>
         `;
     }

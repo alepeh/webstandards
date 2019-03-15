@@ -1,5 +1,7 @@
 import apiClient from '../components/ApiClientFactory.js';
 import {html, render} from 'lit-html';
+import spinner from '../components/Spinner.js'
+
 
 export default class TableView extends HTMLElement {
 
@@ -13,6 +15,7 @@ export default class TableView extends HTMLElement {
     }
 
     connectedCallback(){
+        render(spinner(), this.root);
         this.getResource(this.request.id);
     }
 
@@ -42,7 +45,6 @@ export default class TableView extends HTMLElement {
             table {
                 border-collapse: collapse;
             }
-
             td, th {
                 border: 1px solid #818181;
                 padding: 8px;
