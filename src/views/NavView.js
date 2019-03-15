@@ -29,12 +29,12 @@ export default class NavView extends HTMLElement {
 
     closeNav() {
         document.getElementById("mySidenav").style.width = "0";
-        document.getElementById("content").style.marginLeft = "0";
+        document.getElementById("content").style.marginLeft = "10";
     }
 
     openNav() {
         document.getElementById("mySidenav").style.width = "250px";
-        document.getElementById("content").style.marginLeft = "250px";
+        document.getElementById("content").style.marginLeft = "260px";
       }
 }
 customElements.define('nav-view', NavView);
