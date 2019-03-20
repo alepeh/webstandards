@@ -34,12 +34,18 @@ export default class ObjectView extends HTMLElement {
          a:hover {
             color: #f1f1f1;
           }
+        .navContainer {
+            overflow:auto;
+            height: calc(100% - 100px);
+        }
         </style>
+        <div class="navContainer">
         ${this.resources.map(
           (resource) => html`
-          <div><a href="#/Table/${resource.name}">${this.capitalize(resource.name)}</a></div>
+            <div><a href="#/Table/${resource.name}">${this.capitalize(resource.name)}</a></div>
           `
-        )}`;
+        )}
+        </div>`;
     }
 
     capitalize(text){
