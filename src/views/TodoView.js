@@ -46,6 +46,7 @@ export default class TodoView extends HTMLElement {
             (record) => html`
             <div class="container">
                 <span class="record" @click=${_ => this.delete(record)}>&#128465;</span>
+                <span class="record" @click=${_ => this.complete(record)}>&#10003;</span>
                 <div contentEditable='true' class='record ${(this.isCompleted(record) ? 'completed' : '')}'>
                 ${this.mapTodo(record)}
                 </div>
@@ -88,6 +89,17 @@ export default class TodoView extends HTMLElement {
                 console.dir(data);
                 this.getResource();
                 name.value = "";
+            });
+        })
+    }
+
+    complete(record){
+        const completedDate = new Date();
+        apiClient().then(client => {
+            client.partialUpdate('TODO', record.ID, {COMPLETED_TSTAMP: completedDate})
+            .then((data) => {
+                console.dir(data);
+                this.getResource();
             });
         })
     }
