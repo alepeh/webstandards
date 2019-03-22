@@ -40,6 +40,9 @@ export default class ObjectView extends HTMLElement {
         }
         </style>
         <div class="navContainer">
+        <b>Apps</b>
+            <div><a href="#/Todo">Todo</a></div>
+        <b>Tables</b>
         ${this.resources.map(
           (resource) => html`
             <div><a href="#/Table/${resource.name}">${this.capitalize(resource.name)}</a></div>
