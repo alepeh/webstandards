@@ -1,4 +1,5 @@
 import apiClient from '../components/ApiClientFactory.js';
+import spinner from '../components/Spinner.js'
 import {html, render} from 'lit-html';
 
 export default class TodoView extends HTMLElement {
@@ -10,12 +11,13 @@ export default class TodoView extends HTMLElement {
     }
 
     connectedCallback(){
+        render(spinner(), this.root);
         this.getResource();
     }
 
     getResource(){
         apiClient().then(client => {
-            client.fetchResourceData('TODO?order=COMPLETED_TSTAMP,CREATED_TSTAMP')
+            client.fetchResourceData('TODO?order=COMPLETED_TSTAMP,PRIORITY')
             .then((data) => {
                 this.data = data;
                 this.render();
@@ -39,25 +41,43 @@ export default class TodoView extends HTMLElement {
             .record {
                 display:inline;
             }
+            input {
+                width: 80%;
+            }
+            .hidden {
+                display: none;
+            }
         </style>
         <input type="text" id="addField"/>
         <button id="add" @click=${_ => this.add()}>+</button>
-        ${this.data.resource.map(
+        ${this.data.resource.sort(this.compare).map(
             (record) => html`
             <div class="container">
                 <span class="record" @click=${_ => this.delete(record)}>&#128465;</span>
                 <span class="record" @click=${_ => this.complete(record)}>&#10003;</span>
-                <div contentEditable='true' class='record ${(this.isCompleted(record) ? 'completed' : '')}'>
-                ${this.mapTodo(record)}
+                <div id=${"todo_"+record.ID} contenteditable="true" @input=${e => this.onInput(record.ID)} class='record ${(this.isCompleted(record) ? 'completed' : '')}'>
+                        ${this.serializeTodo(record)}
                 </div>
+                <button class="record hidden" id=${"save_"+record.ID} @click=${_ => this.onUpdate(record.ID)}>Save</button>
             </div>
             `
           )}
         `;
     }
 
-    mapTodo(record){
-        return html `${this.formatTimestamp(record.COMPLETED_TSTAMP)} ${this.formatTimestamp(record.CREATED_TSTAMP)} ${record.NAME}`;
+    compare(a,b){
+        if(a.PRIORITY === "" || a.PRIORITY === null) return 1;
+        if(b.PRIORITY === "" || b.PRIORITY === null) return -1;
+        if(a.PRIORITY === b.PRIORITY) return 0;
+        return a.PRIORITY < b.PRIORITY ? -1 : 1;
+    }
+
+    serializeTodo(record){
+        return html `${this.mapPriority(record.PRIORITY)} ${this.formatTimestamp(record.COMPLETED_TSTAMP)} ${this.formatTimestamp(record.CREATED_TSTAMP)} ${record.NAME}`;
+    }
+
+    mapPriority(priority){
+        return priority ? '('+ priority + ')' : '';
     }
 
     formatTimestamp(timestamp){
@@ -96,12 +116,48 @@ export default class TodoView extends HTMLElement {
     complete(record){
         const completedDate = new Date();
         apiClient().then(client => {
-            client.partialUpdate('TODO', record.ID, {COMPLETED_TSTAMP: completedDate})
+            client.partialUpdate('TODO', record.ID, {COMPLETED_TSTAMP: completedDate, PRIORITY: ''})
             .then((data) => {
                 console.dir(data);
                 this.getResource();
             });
         })
+    }
+
+    onInput(e){
+        console.dir(e);
+        this.getSaveButtonForTodo(e).classList.remove('hidden');
+    }
+
+    onUpdate(id){
+        const changedTodo = this.root.querySelector('#todo_'+id).innerText;
+        console.log(changedTodo);
+        const todo = this.deserializeTodo(changedTodo);
+        apiClient().then(client => {
+            client.partialUpdate('TODO', id, todo)
+            .then((data) => {
+                console.dir(data);
+                this.getResource();
+            });
+        })
+        this.getSaveButtonForTodo(id).classList.add('hidden');
+    }
+
+    deserializeTodo(todoText){
+        //we are only interested in PRIORITY and/or NAME
+        //other fields are not updated atm.
+        let todo = {};
+        if(todoText.startsWith('(')){
+            todo.PRIORITY = todoText.substring(1,2);
+            todo.NAME = todoText.substring(14).trim();
+        } else {
+            todo.NAME = todoText.substring(11).trim();
+        }
+        return todo;
+    }
+
+    getSaveButtonForTodo(id){
+        return this.root.querySelector('#save_'+id);
     }
 }
 customElements.define('todo-view', TodoView)
