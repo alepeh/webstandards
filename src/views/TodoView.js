@@ -8,6 +8,7 @@ export default class TodoView extends HTMLElement {
         this.apiClient =  apiClient();
         this.root = this.attachShadow({ mode: 'open' });
         this.data;
+        this.previouslyFocused;
     }
 
     connectedCallback(){
@@ -53,12 +54,12 @@ export default class TodoView extends HTMLElement {
         ${this.data.resource.sort(this.compare).map(
             (record) => html`
             <div class="container">
-                <span class="record" @click=${_ => this.delete(record)}>&#128465;</span>
                 <span class="record" @click=${_ => this.complete(record)}>&#10003;</span>
-                <div id=${"todo_"+record.ID} contenteditable="true" @input=${e => this.onInput(record.ID)} class='record ${(this.isCompleted(record) ? 'completed' : '')}'>
-                        ${this.serializeTodo(record)}
-                </div>
-                <button class="record hidden" id=${"save_"+record.ID} @click=${_ => this.onUpdate(record.ID)}>Save</button>
+                    <div id=${"todo_"+record.ID} contenteditable="true" @focus=${e => this.onFocus(record.ID)} @input=${e => this.onInput(record.ID)} class='record ${(this.isCompleted(record) ? 'completed' : '')}'>
+                            ${this.serializeTodo(record)}
+                    </div>
+                    <span class="record hidden" id=${"delete_"+record.ID} @click=${_ => this.delete(record)}>&#128465;</span>
+                    <button class="record hidden" id=${"save_"+record.ID} @click=${_ => this.onUpdate(record.ID)}>Save</button>
             </div>
             `
           )}
@@ -95,7 +96,6 @@ export default class TodoView extends HTMLElement {
         apiClient().then(client => {
             client.delete('TODO', record.ID)
             .then((data) => {
-                console.dir(data);
                 this.getResource();
             });
         })
@@ -106,7 +106,6 @@ export default class TodoView extends HTMLElement {
         apiClient().then(client => {
             client.add('TODO', { "resource" : [ {NAME: name.value} ] })
             .then((data) => {
-                console.dir(data);
                 this.getResource();
                 name.value = "";
             });
@@ -118,20 +117,25 @@ export default class TodoView extends HTMLElement {
         apiClient().then(client => {
             client.partialUpdate('TODO', record.ID, {COMPLETED_TSTAMP: completedDate, PRIORITY: ''})
             .then((data) => {
-                console.dir(data);
                 this.getResource();
             });
         })
     }
 
     onInput(e){
-        console.dir(e);
         this.getSaveButtonForTodo(e).classList.remove('hidden');
+    }
+
+    onFocus(e){
+        if(this.previouslyFocused){
+            this.getDeleteButtonForTodo(this.previouslyFocused).classList.add('hidden');
+        }
+        this.previouslyFocused = e;
+        this.getDeleteButtonForTodo(e).classList.remove('hidden');
     }
 
     onUpdate(id){
         const changedTodo = this.root.querySelector('#todo_'+id).innerText;
-        console.log(changedTodo);
         const todo = this.deserializeTodo(changedTodo);
         apiClient().then(client => {
             client.partialUpdate('TODO', id, todo)
@@ -158,6 +162,10 @@ export default class TodoView extends HTMLElement {
 
     getSaveButtonForTodo(id){
         return this.root.querySelector('#save_'+id);
+    }
+
+    getDeleteButtonForTodo(id){
+        return this.root.querySelector('#delete_'+id);
     }
 }
 customElements.define('todo-view', TodoView)
