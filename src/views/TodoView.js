@@ -38,6 +38,7 @@ export default class TodoView extends HTMLElement {
             }
             .completed {
                 text-decoration: line-through;
+                color: #bbb;
             }
             .record {
                 display:inline;
@@ -48,17 +49,26 @@ export default class TodoView extends HTMLElement {
             .hidden {
                 display: none;
             }
+            .btn_complete {
+                background: lightblue;
+                padding: 5px;
+            }
+            .btn_delete {
+                background: red;
+                color: fff;
+                padding: 3px;
+            }
         </style>
         <input type="text" id="addField"/>
         <button id="add" @click=${_ => this.add()}>+</button>
         ${this.data.resource.sort(this.compare).map(
             (record) => html`
             <div class="container">
-                <span class="record" @click=${_ => this.complete(record)}>&#10003;</span>
+                <span class="record btn_complete" @click=${_ => this.complete(record)}>&#10003;</span>
                     <div id=${"todo_"+record.ID} contenteditable="true" @focus=${e => this.onFocus(record.ID)} @input=${e => this.onInput(record.ID)} class='record ${(this.isCompleted(record) ? 'completed' : '')}'>
                             ${this.serializeTodo(record)}
                     </div>
-                    <span class="record hidden" id=${"delete_"+record.ID} @click=${_ => this.delete(record)}>&#128465;</span>
+                    <span class="record hidden btn_delete" id=${"delete_"+record.ID} @click=${_ => this.delete(record)}>Delete</span>
                     <button class="record hidden" id=${"save_"+record.ID} @click=${_ => this.onUpdate(record.ID)}>Save</button>
             </div>
             `
