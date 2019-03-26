@@ -40,8 +40,12 @@ export default class TodoView extends HTMLElement {
                 text-decoration: line-through;
                 color: #bbb;
             }
+            .container {
+                padding: 5px;
+            }
             .record {
                 display:inline;
+                padding: 5px;
             }
             input {
                 width: 80%;
@@ -56,7 +60,10 @@ export default class TodoView extends HTMLElement {
             .btn_delete {
                 background: red;
                 color: fff;
-                padding: 3px;
+            }
+            .btn_save {
+                background: lightgreen;
+                color: fff;
             }
         </style>
         <input type="text" id="addField"/>
@@ -69,7 +76,7 @@ export default class TodoView extends HTMLElement {
                             ${this.serializeTodo(record)}
                     </div>
                     <span class="record hidden btn_delete" id=${"delete_"+record.ID} @click=${_ => this.delete(record)}>Delete</span>
-                    <button class="record hidden" id=${"save_"+record.ID} @click=${_ => this.onUpdate(record.ID)}>Save</button>
+                    <span class="record hidden btn_save" id=${"save_"+record.ID} @click=${_ => this.onUpdate(record.ID)}>Save</span>
             </div>
             `
           )}
