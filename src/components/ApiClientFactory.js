@@ -1,17 +1,10 @@
-import ApiClient from "./DBClient";
+import ApiClient from "./DBApiClient";
+import RemoteFileClient from "./RemoteFileApiClient";
+import AuthenticationClient from "./AuthenticationClient";
 
-export default function apiClient(){
+let authClient;
 
-    return fetch('/config')
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            return new ApiClient(data.apikey, data.apiurl);
-        });
-}
-
-export function fileClient(){
+function dbApiClient(){
 
     return fetch('/config')
         .then(response => {
@@ -21,3 +14,30 @@ export function fileClient(){
             return new ApiClient(data.apikey, data.apiurl);
         });
 }
+
+async function remoteFileApiClient(){
+    await authenticationClient().then(client => {
+        authClient =  client;
+    });
+    return fetch('/config')
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            console.dir(authClient);
+            return new RemoteFileClient(data.apikey, data.apiurl, authClient);
+        });
+}
+
+async function authenticationClient(){
+
+    return fetch('/config')
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            return new AuthenticationClient(data.apikey, data.apiurl);
+        });
+}
+
+export {dbApiClient as apiClient, remoteFileApiClient, authenticationClient}

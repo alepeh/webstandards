@@ -1,4 +1,4 @@
-import apiClient from '../components/ApiClientFactory.js';
+import * as clientFactory from '../components/ApiClientFactory.js';
 import {html, render} from 'lit-html';
 
 export default class ObjectView extends HTMLElement {
@@ -56,7 +56,7 @@ export default class ObjectView extends HTMLElement {
     }
 
     getResources(){
-        apiClient().then(client => {
+        clientFactory.apiClient().then(client => {
             client.fetchResources()
             .then((data) => {
                 this.resources = data.resource;

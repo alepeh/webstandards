@@ -2,7 +2,7 @@ import * as clientFactory from '../../components/ApiClientFactory.js';
 import spinner from '../../components/Spinner.js'
 import {html, render} from 'lit-html';
 
-export default class TodoView extends HTMLElement {
+export default class TodoFileView extends HTMLElement {
     constructor(){
         super();
         this.root = this.attachShadow({ mode: 'open' });
@@ -16,9 +16,10 @@ export default class TodoView extends HTMLElement {
     }
 
     getResource(){
-        clientFactory.apiClient().then(client => {
-            client.fetchResourceData('TODO?order=COMPLETED_TSTAMP,PRIORITY')
+        clientFactory.remoteFileApiClient().then(client => {
+            client.getFileOrFolder('org/todo.txt')
             .then((data) => {
+                console.log(data);
                 this.data = data;
                 this.render();
             });
@@ -67,18 +68,7 @@ export default class TodoView extends HTMLElement {
         </style>
         <input type="text" id="addField"/>
         <button id="add" @click=${_ => this.add()}>+</button>
-        ${this.data.resource.sort(this.compare).map(
-            (record) => html`
-            <div class="container">
-                <span class="record btn_complete" @click=${_ => this.complete(record)}>&#10003;</span>
-                    <div id=${"todo_"+record.ID} contenteditable="true" @focus=${e => this.onFocus(record.ID)} @input=${e => this.onInput(record.ID)} class='record ${(this.isCompleted(record) ? 'completed' : '')}'>
-                            ${this.serializeTodo(record)}
-                    </div>
-                    <span class="record hidden btn_delete" id=${"delete_"+record.ID} @click=${_ => this.delete(record)}>Delete</span>
-                    <span class="record hidden btn_save" id=${"save_"+record.ID} @click=${_ => this.onUpdate(record.ID)}>Save</span>
-            </div>
-            `
-          )}
+        ${this.data}
         `;
     }
 
@@ -184,4 +174,4 @@ export default class TodoView extends HTMLElement {
         return this.root.querySelector('#delete_'+id);
     }
 }
-customElements.define('todo-view', TodoView)
+customElements.define('todo-file-view', TodoFileView)

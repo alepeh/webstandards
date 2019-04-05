@@ -1,4 +1,4 @@
-import apiClient from '../components/ApiClientFactory.js';
+import * as clientFactory from '../components/ApiClientFactory.js';
 import {html, render} from 'lit-html';
 import spinner from '../components/Spinner.js'
 
@@ -8,7 +8,6 @@ export default class TableView extends HTMLElement {
     constructor(request) {
         super();
         this.request = request;
-        this.apiClient =  apiClient();
         this.root = this.attachShadow({ mode: 'open' });
         this.schema;
         this.data;
@@ -24,13 +23,13 @@ export default class TableView extends HTMLElement {
     }
 
     async getResource(name){
-        await apiClient().then(client => {
+        await clientFactory.apiClient().then(client => {
             client.fetchResourceSchema(name)
             .then((schema) => {
                 this.schema = schema;
             });
         })
-        await apiClient().then(client => {
+        await clientFactory.apiClient().then(client => {
             client.fetchResourceData(name)
             .then((data) => {
                 this.data = data;

@@ -1,4 +1,4 @@
-import apiClient from './components/ApiClientFactory.js';
+import * as clientFactory from './components/ApiClientFactory';
  
 export default class CabinLogin extends HTMLElement {
 
@@ -28,7 +28,7 @@ export default class CabinLogin extends HTMLElement {
     }
 
     login(){
-        apiClient().then(client => {
+        clientFactory.apiClient().then(client => {
             client.login(this.usernameInput.value, this.passwordInput.value);
         });
     }

@@ -1,4 +1,4 @@
-import apiClient from '../components/ApiClientFactory.js';
+import * as clientFactory from '../components/ApiClientFactory.js';
 import {html, render} from 'lit-html';
 
 export default class ItemView extends HTMLElement {
@@ -47,7 +47,7 @@ export default class ItemView extends HTMLElement {
     save(){
         if(this.verb === 'edit'){
             console.log('edit');
-            apiClient().then(client => {
+            clientFactory.apiClient().then(client => {
                 client.partialUpdate(this.resource, this.data['ID'], this.changedData);
             });
         }
@@ -56,7 +56,7 @@ export default class ItemView extends HTMLElement {
             let newRecord = {"resource" : [
                 this.changedData
             ]};
-            apiClient().then(client => {
+            clientFactory.apiClient().then(client => {
                 client.add(this.resource, newRecord);
             });
         }
