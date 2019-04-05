@@ -14,6 +14,7 @@ export default class ItemView extends HTMLElement {
     }
 
     connectedCallback(){
+        console.dir(this.data);
         render(this.template(), this.root);
     }
 
