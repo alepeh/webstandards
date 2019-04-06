@@ -1,6 +1,7 @@
 import * as clientFactory from '../../components/ApiClientFactory.js';
 import spinner from '../../components/Spinner.js'
 import {html, render} from 'lit-html';
+import TodoElement from './TodoElement';
 
 export default class TodoFileView extends HTMLElement {
     constructor(){
@@ -68,7 +69,10 @@ export default class TodoFileView extends HTMLElement {
         </style>
         <input type="text" id="addField"/>
         <button id="add" @click=${_ => this.add()}>+</button>
-        ${this.data}
+        ${this.data.split('\n').map(line =>  html`
+            <div><todo-item value='${line}'></todo-item></div>
+            `
+        )}
         `;
     }
 
