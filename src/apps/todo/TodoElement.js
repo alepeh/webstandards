@@ -47,6 +47,18 @@ export default class TodoElement extends HTMLElement {
                     display: inline;
                     font-family: monospace;
                 }
+                .prio_A {
+                    color: lightcoral;
+                }
+                .prio_B {
+                    color: orange;
+                }
+                .prio_C {
+                    color: blue;
+                }
+                .prio_D {
+                    color: green;
+                }
                 #btn_save {
                     background: lightgreen;
                     color: fff;
@@ -61,7 +73,7 @@ export default class TodoElement extends HTMLElement {
                     display: none;
                 }
             </style>
-            <div class="container" contenteditable=true @input=${e => this.onInput()} @focus=${e => this.onFocus()} @focusout=${e => this.onFocusOut()}>
+            <div class="container prio_${this.removeBrackets(this.todo.model.priority)}" contenteditable=true @input=${e => this.onInput()} @focus=${e => this.onFocus()} @focusout=${e => this.onFocusOut()}>
                 <div id="content">
                     <span>${this.todo.model.completionMark}</span>
                     <span>${this.todo.model.priority}</span>
@@ -73,6 +85,16 @@ export default class TodoElement extends HTMLElement {
                 <span id="btn_delete" class="hidden" @click=${_ => this.onDelete()}>Delete</span>
             </div>
         `;
+    }
+
+    removeBrackets(priority){
+        if(priority){
+            priority = priority.replace('(','');
+            priority = priority.replace(')','');
+            console.log(priority);
+            return priority;
+        }
+        return '';
     }
 
     onInput(){
