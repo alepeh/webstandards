@@ -28,7 +28,7 @@ export default class CabinLogin extends HTMLElement {
     }
 
     login(){
-        clientFactory.apiClient().then(client => {
+        clientFactory.authenticationClient().then(client => {
             client.login(this.usernameInput.value, this.passwordInput.value);
         });
     }
