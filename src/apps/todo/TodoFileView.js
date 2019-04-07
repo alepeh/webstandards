@@ -54,7 +54,7 @@ export default class TodoFileView extends HTMLElement {
                 width: 80%;
             }
         </style>
-        <input type="text" id="addField"/>
+        <input type="text" id="addField" @focus=${_ => this.onAddFocus()}/>
         <button id="add" @click=${_ => this.add()}>+</button>
         ${this.data.split('\n').sort().map(line =>  html`
             <div><todo-item value='${line}'></todo-item></div>
@@ -68,7 +68,7 @@ export default class TodoFileView extends HTMLElement {
     }
 
     add(){
-        let val = this.root.querySelector('#addField');
+        let val = this.getAddField();
         this.data = this.data.concat(val.value,'\n');
         clientFactory.remoteFileApiClient().then(client => {
             client.updateFileOrFolder('org/todo.txt', this.data)
@@ -76,6 +76,18 @@ export default class TodoFileView extends HTMLElement {
                 this.getResource();
             });
         })
+    }
+
+    onAddFocus(){
+        let text = this.getAddField().value;
+        if (!text){
+            let creationDate = new Date().toISOString().substring(0,10);
+            this.getAddField().value = creationDate + ' ';
+        }
+    }
+
+    getAddField(){
+        return this.root.querySelector('#addField');
     }
 
     onUpdate(e){
