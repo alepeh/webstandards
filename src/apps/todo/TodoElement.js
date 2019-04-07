@@ -47,23 +47,70 @@ export default class TodoElement extends HTMLElement {
                     display: inline;
                     font-family: monospace;
                 }
-                .btn_save {
+                #btn_save {
                     background: lightgreen;
                     color: fff;
+                    font-family: monospace;
+                }
+                #btn_delete {
+                    background: lightcoral;
+                    color: fff;
+                    font-family: monospace;
+                }
+                .hidden {
+                    display: none;
                 }
             </style>
-            <div class="container" contenteditable=true>
-            <span>${this.todo.model.priority}</span>
-            <span>${this.todo.model.completionDate}</span>
-            <span>${this.todo.model.creationDate}</span>
-            <span>${this.todo.model.description}</span>
+            <div class="container" contenteditable=true @input=${e => this.onInput()} @focus=${e => this.onFocus()} @focusout=${e => this.onFocusOut()}>
+                <div id="content">
+                    <span>${this.todo.model.completionMark}</span>
+                    <span>${this.todo.model.priority}</span>
+                    <span>${this.todo.model.completionDate}</span>
+                    <span>${this.todo.model.creationDate}</span>
+                    <span>${this.todo.model.description}</span>
+                </div>
+                <span id="btn_save" class="hidden" @click=${_ => this.onUpdate()}>Save</span>
+                <span id="btn_delete" class="hidden" @click=${_ => this.onDelete()}>Delete</span>
             </div>
-            <span class="record btn_save" @click=${_ => this.onUpdate()}>Save</span>
         `;
     }
 
+    onInput(){
+        this.getSaveButton().classList.remove('hidden');
+    }
+
+    onFocusOut(){
+        this.getSaveButton().classList.add('hidden');
+        this.getDeleteButton().classList.add('hidden');
+    }
+
+    onFocus(){
+        this.getDeleteButton().classList.remove('hidden');
+    }
+
     onUpdate(){
-        console.log("save");
+        const newVal = this.root.querySelector('#content').innerText;
+        const oldVal = this.todo.value;
+        const event = new CustomEvent('todo-updated', {
+            detail: {
+                oldValue : oldVal,
+                newValue : newVal
+            },
+            bubbles: true
+        });
+        document.dispatchEvent(event);
+    }
+
+    onDelete(){
+        console.log("delete");
+    }
+
+    getSaveButton(){
+        return this.root.querySelector('#btn_save');
+    }
+
+    getDeleteButton(){
+        return this.root.querySelector('#btn_delete');
     }
 }
 customElements.define('todo-item', TodoElement);

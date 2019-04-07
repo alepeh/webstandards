@@ -13,6 +13,8 @@ export default class TodoFileView extends HTMLElement {
 
     connectedCallback(){
         render(spinner(), this.root);
+        document.addEventListener('todo-updated', e => this.onUpdate(e));
+        document.addEventListener('todo-deleted', e => this.onDelete(e));
         this.getResource();
     }
 
@@ -51,131 +53,41 @@ export default class TodoFileView extends HTMLElement {
             input {
                 width: 80%;
             }
-            .hidden {
-                display: none;
-            }
-            .btn_complete {
-                background: lightblue;
-                padding: 5px;
-            }
-            .btn_delete {
-                background: red;
-                color: fff;
-            }
-            .btn_save {
-                background: lightgreen;
-                color: fff;
-            }
         </style>
         <input type="text" id="addField"/>
         <button id="add" @click=${_ => this.add()}>+</button>
-        ${this.data.split('\n').map(line =>  html`
+        ${this.data.split('\n').sort().map(line =>  html`
             <div><todo-item value='${line}'></todo-item></div>
             `
         )}
         `;
     }
 
-    compare(a,b){
-        if(a.PRIORITY === "" || a.PRIORITY === null) return 1;
-        if(b.PRIORITY === "" || b.PRIORITY === null) return -1;
-        if(a.PRIORITY === b.PRIORITY) return 0;
-        return a.PRIORITY < b.PRIORITY ? -1 : 1;
-    }
-
-    serializeTodo(record){
-        return html `${this.mapPriority(record.PRIORITY)} ${this.formatTimestamp(record.COMPLETED_TSTAMP)} ${this.formatTimestamp(record.CREATED_TSTAMP)} ${record.NAME}`;
-    }
-
-    mapPriority(priority){
-        return priority ? '('+ priority + ')' : '';
-    }
-
-    formatTimestamp(timestamp){
-        if(timestamp === null){
-            return "";
-        }
-        return timestamp.substring(0,10);
-    }
-
-    isCompleted(record){
-        return record.COMPLETED_TSTAMP ? true : false; 
-    }
-
-    delete(record){
-        clientFactory.apiClient().then(client => {
-            client.delete('TODO', record.ID)
-            .then((data) => {
-                this.getResource();
-            });
-        })
+    onDelete(e){
+        console.dir(e);
     }
 
     add(){
-        let name = this.root.querySelector('#addField');
-        clientFactory.apiClient().then(client => {
-            client.add('TODO', { "resource" : [ {NAME: name.value} ] })
-            .then((data) => {
-                this.getResource();
-                name.value = "";
-            });
-        })
-    }
-
-    complete(record){
-        const completedDate = new Date();
-        clientFactory.apiClient().then(client => {
-            client.partialUpdate('TODO', record.ID, {COMPLETED_TSTAMP: completedDate, PRIORITY: ''})
+        let val = this.root.querySelector('#addField');
+        this.data = this.data.concat(val.value,'\n');
+        clientFactory.remoteFileApiClient().then(client => {
+            client.updateFileOrFolder('org/todo.txt', this.data)
             .then((data) => {
                 this.getResource();
             });
         })
     }
 
-    onInput(e){
-        this.getSaveButtonForTodo(e).classList.remove('hidden');
-    }
-
-    onFocus(e){
-        if(this.previouslyFocused){
-            this.getDeleteButtonForTodo(this.previouslyFocused).classList.add('hidden');
-        }
-        this.previouslyFocused = e;
-        this.getDeleteButtonForTodo(e).classList.remove('hidden');
-    }
-
-    onUpdate(id){
-        const changedTodo = this.root.querySelector('#todo_'+id).innerText;
-        const todo = this.deserializeTodo(changedTodo);
-        clientFactory.apiClient().then(client => {
-            client.partialUpdate('TODO', id, todo)
+    onUpdate(e){
+        const oldValue = e.detail.oldValue;
+        const newValue = e.detail.newValue;
+        this.data = this.data.replace(oldValue, newValue);
+        clientFactory.remoteFileApiClient().then(client => {
+            client.updateFileOrFolder('org/todo.txt', this.data)
             .then((data) => {
-                console.dir(data);
                 this.getResource();
             });
         })
-        this.getSaveButtonForTodo(id).classList.add('hidden');
-    }
-
-    deserializeTodo(todoText){
-        //we are only interested in PRIORITY and/or NAME
-        //other fields are not updated atm.
-        let todo = {};
-        if(todoText.startsWith('(')){
-            todo.PRIORITY = todoText.substring(1,2);
-            todo.NAME = todoText.substring(14).trim();
-        } else {
-            todo.NAME = todoText.substring(11).trim();
-        }
-        return todo;
-    }
-
-    getSaveButtonForTodo(id){
-        return this.root.querySelector('#save_'+id);
-    }
-
-    getDeleteButtonForTodo(id){
-        return this.root.querySelector('#delete_'+id);
     }
 }
 customElements.define('todo-file-view', TodoFileView)

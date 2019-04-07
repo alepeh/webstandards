@@ -25,4 +25,21 @@ export default class RemoteFileApiClient {
         .then(body => {return body.text()});
     }
 
+    async updateFileOrFolder(path, data) {
+        await this.authClient.refreshTokenIfRequired();
+        console.dir(data);
+        return fetch(this.API_BASE_PATH + '/' + SERVICE + path, {
+            mode: "cors",
+            method: "PUT",
+            headers: {
+                "X-DreamFactory-Session-Token": token.getSessionTokenFromCookie(),
+                "X-DreamFactory-API-Key": this.APIKEY,
+                "Content-Type": "raw; charset=utf-8"
+            },
+            body: data
+        })
+        .then(response.status)
+        .then(body => {return body.text()});
+    }
+
 }
