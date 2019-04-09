@@ -15,9 +15,7 @@ export default class TodoElement extends HTMLElement {
 
     connectedCallback(){
         this._upgradeProperty('value');
-        this.todo = new Todo().parse(this.value);
-        console.dir(this.todo);
-        this.render();
+        this.initializeAndRender(this.value);
     }
 
     _upgradeProperty(prop) {
@@ -28,16 +26,18 @@ export default class TodoElement extends HTMLElement {
         }
     }
 
+    initializeAndRender(value){
+        this.todo = new Todo().parse(this.value);
+        render(this.template(), this.root);
+    }
+
     set value(val) {
         this.setAttribute('value', val);
+        this.initializeAndRender(val);
     }
   
     get value() {
         return this.getAttribute('value');
-    }
-
-    render(){
-        render(this.template(), this.root);
     }
 
     template(){
@@ -59,6 +59,10 @@ export default class TodoElement extends HTMLElement {
                 .prio_D {
                     color: green;
                 }
+                .completed {
+                    color: #aaa;
+                    text-decoration: line-through;
+                }
                 #btn_save {
                     background: lightgreen;
                     color: fff;
@@ -73,7 +77,7 @@ export default class TodoElement extends HTMLElement {
                     display: none;
                 }
             </style>
-            <div class="container prio_${this.removeBrackets(this.todo.model.priority)}" contenteditable=true @input=${e => this.onInput()} @focus=${e => this.onFocus()} @focusout=${e => this.onFocusOut()}>
+            <div class="container ${this.todo.model.completed ? 'completed' : ''} prio_${this.removeBrackets(this.todo.model.priority)}" contenteditable=true @input=${e => this.onInput()} @focus=${e => this.onFocus()} @focusout=${e => this.onFocusOut()}>
                 <div id="content">
                     <span>${this.todo.model.completionMark}</span>
                     <span>${this.todo.model.priority}</span>
@@ -91,7 +95,6 @@ export default class TodoElement extends HTMLElement {
         if(priority){
             priority = priority.replace('(','');
             priority = priority.replace(')','');
-            console.log(priority);
             return priority;
         }
         return '';
@@ -124,7 +127,14 @@ export default class TodoElement extends HTMLElement {
     }
 
     onDelete(){
-        console.log("delete");
+        const item = this.root.querySelector('#content').innerText;
+        const event = new CustomEvent('todo-deleted', {
+            detail: {
+                value : item
+            },
+            bubbles: true
+        });
+        document.dispatchEvent(event);
     }
 
     getSaveButton(){

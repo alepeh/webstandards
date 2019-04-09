@@ -22,18 +22,18 @@ export default class TodoFileView extends HTMLElement {
         clientFactory.remoteFileApiClient().then(client => {
             client.getFileOrFolder('org/todo.txt')
             .then((data) => {
-                console.log(data);
                 this.data = data;
-                this.render();
+                this.render(data);
             });
         })
     }
 
-    render(){
-        render(this.template(), this.root);
+    render(data){
+        console.log("render triggered");
+        render(this.template(data), this.root);
     }
 
-    template(){
+    template(data){
         return html`
         <style>
             #add {
@@ -56,24 +56,30 @@ export default class TodoFileView extends HTMLElement {
         </style>
         <input type="text" id="addField" @focus=${_ => this.onAddFocus()}/>
         <button id="add" @click=${_ => this.add()}>+</button>
-        ${this.data.split('\n').sort().map(line =>  html`
-            <div><todo-item value='${line}'></todo-item></div>
+        <button id="add" @click=${_ => this.getResource()}>Refresh</button>
+        ${data.split('\n').sort().map(line =>  html`
+            <div><todo-item .value='${line}'></todo-item></div>
             `
         )}
         `;
     }
 
     onDelete(e){
-        console.dir(e);
-    }
+        this.data = this.data.replace(e.detail.value + '\n','');
+        clientFactory.remoteFileApiClient().then(client => {
+            client.updateFileOrFolder('org/todo.txt', this.data)
+            .then(_ => {
+                this.render(this.data);
+            });
+        })    }
 
     add(){
         let val = this.getAddField();
         this.data = this.data.concat(val.value,'\n');
         clientFactory.remoteFileApiClient().then(client => {
             client.updateFileOrFolder('org/todo.txt', this.data)
-            .then((data) => {
-                this.getResource();
+            .then(_ => {
+                this.render(this.data);
             });
         })
     }
@@ -91,13 +97,15 @@ export default class TodoFileView extends HTMLElement {
     }
 
     onUpdate(e){
+        console.log("onUpdate");
         const oldValue = e.detail.oldValue;
         const newValue = e.detail.newValue;
         this.data = this.data.replace(oldValue, newValue);
         clientFactory.remoteFileApiClient().then(client => {
             client.updateFileOrFolder('org/todo.txt', this.data)
-            .then((data) => {
-                this.getResource();
+            .then(_ => {
+                console.log("update of file finished");
+                this.render(this.data);
             });
         })
     }
