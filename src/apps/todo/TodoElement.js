@@ -78,13 +78,14 @@ export default class TodoElement extends HTMLElement {
                 }
             </style>
             <div class="container ${this.todo.model.completed ? 'completed' : ''} prio_${this.removeBrackets(this.todo.model.priority)}" contenteditable=true @input=${e => this.onInput()} @focus=${e => this.onFocus()} @focusout=${e => this.onFocusOut()}>
-                <div id="content">
+                <div id="content" class="container">
                     <span>${this.todo.model.completionMark}</span>
                     <span>${this.todo.model.priority}</span>
                     <span>${this.todo.model.completionDate}</span>
                     <span>${this.todo.model.creationDate}</span>
                     <span>${this.todo.model.description}</span>
                 </div>
+                <span @click=${_ => this.onNewNote('1234')}>Note</span>
                 <span id="btn_save" class="hidden" @click=${_ => this.onUpdate()}>Save</span>
                 <span id="btn_delete" class="hidden" @click=${_ => this.onDelete()}>Delete</span>
             </div>
@@ -143,6 +144,20 @@ export default class TodoElement extends HTMLElement {
 
     getDeleteButton(){
         return this.root.querySelector('#btn_delete');
+    }
+
+    onNewNote(id){
+        const event = new CustomEvent('vanilla-nav', {
+            detail : {
+                request : {
+                    resource: 'Note',
+                    id: id,
+                    verb: 'new-note',
+                }
+            },
+            bubbles: true
+        });
+        document.dispatchEvent(event);
     }
 }
 customElements.define('todo-item', TodoElement);
