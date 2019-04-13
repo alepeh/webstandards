@@ -3,8 +3,6 @@ import SchemaView from './views/SchemaView';
 import TableView from './views/TableView';
 import HomeView from './views/HomeView';
 import ItemView from './views/ItemView';
-import TodoFileView from './apps/todo/TodoFileView';
-import NoteView from './apps/todo/NoteView';
 
 export default class VanillaSlot extends HTMLElement {
 
@@ -17,8 +15,6 @@ export default class VanillaSlot extends HTMLElement {
             'Schema' : SchemaView,
             'Table' : TableView,
             'Item' : ItemView,
-            'TodoFile' : TodoFileView,
-            'Note' : NoteView
         }
     }
 
