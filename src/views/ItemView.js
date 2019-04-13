@@ -21,22 +21,25 @@ export default class ItemView extends HTMLElement {
     template(){
         return html`
         <style>
-        table {
-            border-collapse: collapse;
-        }
-
-        td, th {
-            border: 1px solid #818181;
-            padding: 8px;
-        }
+            input {
+                width: 100%;
+                padding: 12px 20px;
+                margin: 8px 0;
+                display: inline-block;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+                font-size: 1em;
+            }
+            label {
+                color: #818181;
+            }
         </style>
         <table>
         ${this.fields.map(
             (row) => html`
-            <tr>
-            <td>${row}</td>
-            <td><input .value=${this.data ? this.data[row] : ''} @change=${e => this.inputChanged(e,row)}></input></td>
-            </tr>
+            <label for="${row}">${row}</label>
+            <input id="${row}" .value=${this.data ? this.data[row] : ''} @change=${e => this.inputChanged(e,row)}></input>
           `
         )}
         </table>
