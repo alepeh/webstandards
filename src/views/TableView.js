@@ -1,6 +1,7 @@
 import * as clientFactory from '../components/ApiClientFactory.js';
 import {html, render} from 'lit-html';
 import spinner from '../components/Spinner.js'
+import FloatingActionButton from '../components/FloatingActionButton';
 
 
 export default class TableView extends HTMLElement {
@@ -52,7 +53,7 @@ export default class TableView extends HTMLElement {
                 font-size: 2em
             }
         </style>
-        <button id="add" @click=${_ => this.onAction('add',{ fields: this.mapFieldNames()})}>+</button>
+        <floating-action-button @click=${_ => this.onAction('add',{ fields: this.mapFieldNames()})}> + </floating-action-button>
         <table>
         <tr>
         ${this.schema.field.map(
