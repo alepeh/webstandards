@@ -12,6 +12,7 @@ export default class TableView extends HTMLElement {
         this.root = this.attachShadow({ mode: 'open' });
         this.schema;
         this.data;
+        this.order = { field: '', direction: ''};
     }
 
     connectedCallback(){
@@ -31,7 +32,7 @@ export default class TableView extends HTMLElement {
             });
         })
         await clientFactory.apiClient().then(client => {
-            client.fetchResourceData(name)
+            client.fetchResourceData(name, this.order)
             .then((data) => {
                 this.data = data;
                 this.render();
@@ -58,7 +59,7 @@ export default class TableView extends HTMLElement {
         <tr>
         ${this.schema.field.map(
           (field) => html`
-          <th>${field.name}</th>
+          <th @click=${_ => this.setOrder(field.name)}>${field.name}</th>
           `
         )}
         </tr>
@@ -97,6 +98,12 @@ export default class TableView extends HTMLElement {
         })
         console.dir(this.schema.field);
         return fieldNames;
+    }
+
+    setOrder(field){
+        this.order.field = field;
+        this.order.direction = this.order.direction === 'DESC' ? 'ASC' : 'DESC'; 
+        this.getResource(this.request.id);
     }
 }
 customElements.define('table-view', TableView);

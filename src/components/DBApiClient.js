@@ -36,9 +36,13 @@ export default class ApiClient {
         .then(response.json)
     }
 
-    async fetchResourceData(name) {
+    async fetchResourceData(name, order) {
         await this.authClient.refreshTokenIfRequired();
-        return fetch(this.API_BASE_PATH + '/AWS_RDS1/_table/' + name, {
+        let url = this.API_BASE_PATH + '/AWS_RDS1/_table/' + name;
+        if(order){
+            url = url + '?order=' + order.field + ' ' + order.direction;
+        }
+        return fetch(url, {
             mode: "cors",
             headers: {
                 "X-DreamFactory-Session-Token": token.getSessionTokenFromCookie(),
