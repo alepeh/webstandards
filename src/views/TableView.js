@@ -53,13 +53,19 @@ export default class TableView extends HTMLElement {
             #add {
                 font-size: 2em
             }
+            .ASC:after{
+                content: " ↑";
+            }
+            .DESC:after{
+                content: " ↓";
+            }
         </style>
         <floating-action-button @click=${_ => this.onAction('add',{ fields: this.mapFieldNames()})}> + </floating-action-button>
         <table>
         <tr>
         ${this.schema.field.map(
           (field) => html`
-          <th @click=${_ => this.setOrder(field.name)}>${field.name}</th>
+          <th id=${field.name} @click=${_ => this.setOrder(field.name)}>${field.name}</th>
           `
         )}
         </tr>
@@ -101,8 +107,15 @@ export default class TableView extends HTMLElement {
     }
 
     setOrder(field){
+        let oldField = this.order.field;
+        let oldDirection = this.order.direction;
+        if(oldField){
+            this.root.getElementById(oldField).classList.remove(oldDirection);
+        }
+        let newDirection = this.order.direction === 'DESC' ? 'ASC' : 'DESC'; 
+        this.root.getElementById(field).classList.add(newDirection);
         this.order.field = field;
-        this.order.direction = this.order.direction === 'DESC' ? 'ASC' : 'DESC'; 
+        this.order.direction = newDirection;
         this.getResource(this.request.id);
     }
 }
