@@ -16,8 +16,9 @@ export default class TableView extends HTMLElement {
     }
 
     connectedCallback(){
+        console.log("Resource:" + this.request.resource);
         render(spinner(), this.root);
-        this.getResource(this.request.id);
+        this.getResource(this.request.resource);
     }
 
     render(){
@@ -60,7 +61,7 @@ export default class TableView extends HTMLElement {
                 content: " ↓";
             }
         </style>
-        <floating-action-button @click=${_ => this.onAction('add',{ fields: this.mapFieldNames()})}> + </floating-action-button>
+        <floating-action-button @click=${_ => this.onAction('add')}> + </floating-action-button>
         <table>
         <tr>
         ${this.schema.field.map(
@@ -71,7 +72,7 @@ export default class TableView extends HTMLElement {
         </tr>
         ${this.data.resource.map(
             (resource) => html`
-            <tr @click=${_ => this.onAction('edit',{ fields: this.mapFieldNames(), data: resource})}>
+            <tr @click=${_ => this.onAction('edit',resource.ID)}>
             ${Object.values(resource).map(
                 (row) => html`
                 <td>${row}</td>
@@ -83,19 +84,8 @@ export default class TableView extends HTMLElement {
         `;
     }
 
-    onAction(action, payload){
-        const event = new CustomEvent('vanilla-nav', {
-            detail : {
-                request : {
-                    resource: 'Item',
-                    id: this.request.id,
-                    verb: action,
-                    payload: payload
-                }
-            },
-            bubbles: true
-        });
-        document.dispatchEvent(event);
+    onAction(action, id){
+        window.location.hash = "/Item/" + this.request.resource + "/" + (id ? id + '/' : '/') + action;
     }
 
     mapFieldNames(){
@@ -116,7 +106,7 @@ export default class TableView extends HTMLElement {
         this.root.getElementById(field).classList.add(newDirection);
         this.order.field = field;
         this.order.direction = newDirection;
-        this.getResource(this.request.id);
+        this.getResource(this.request.resource);
     }
 }
 customElements.define('table-view', TableView);

@@ -31,14 +31,16 @@ export default class VanillaNav extends HTMLElement {
         let r = url.split("/")
         let request = {
             route       : null,
-            resource    : null,
-            id          : null,
+            view    : null,
+            resource          : null,
+            id : null,
             verb        : null
         }
-        request.resource    = r[1]
-        request.id          = r[2]
-        request.verb        = r[3]
-        request.route = (request.resource ? '/' + request.resource : '/') + (request.id ? '/:id' : '') + (request.verb ? '/' + request.verb : '');
+        request.view    = r[1]
+        request.resource          = r[2]
+        request.id = r[3]
+        request.verb        = r[4]
+        request.route = (request.view ? '/' + request.view : '/') + (request.resource ? '/:resource' : '') + (request.id ? '/:id' : '') + (request.verb ? '/' + request.verb : '');
         return request;
     }
 }

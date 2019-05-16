@@ -5,17 +5,40 @@ export default class ItemView extends HTMLElement {
 
     constructor(request) {
         super();
-        this.fields = request.payload.fields;
+        this.request = request;
         this.root = this.attachShadow({ mode: 'open' });
-        this.data = request.payload.data;
+        this.data;
         this.changedData = {};
-        this.resource = request.id;
+        this.id = request.id;
+        this.resource = request.resource;
         this.verb = request.verb;
+        this.schema;
     }
 
     connectedCallback(){
-        console.dir(this.data);
-        render(this.template(), this.root);
+        this.fetchDataFromBackend(this.resource, this.id);
+    }
+
+    async fetchDataFromBackend(name, id){
+        await clientFactory.apiClient().then(client => {
+            client.fetchResourceSchema(name)
+            .then((schema) => {
+                this.schema = schema;
+                render(this.template(), this.root);
+            })
+            .then(_ => {
+                if(id){
+                    clientFactory.apiClient().then(client => {
+                        client.fetchResourceDataById(name, id)
+                        .then((data) => {
+                        this.data = data;
+                        console.dir(data);
+                        render(this.template(), this.root);
+                        });
+                    })
+                }
+            })
+        })
     }
 
     template(){
@@ -36,10 +59,10 @@ export default class ItemView extends HTMLElement {
             }
         </style>
         <table>
-        ${this.fields.map(
+        ${this.schema.field.map(
             (row) => html`
-            <label for="${row}">${row}</label>
-            <input id="${row}" .value=${this.data ? this.data[row] : ''} @change=${e => this.inputChanged(e,row)}></input>
+            <label for="${row.name}">${row.name}</label>
+            <input id="${row.name}" .value=${this.data ? this.data[row.name] : ''} @change=${e => this.inputChanged(e,row.name)}></input>
           `
         )}
         </table>

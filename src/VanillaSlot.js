@@ -30,7 +30,7 @@ export default class VanillaSlot extends HTMLElement {
     }
 
     loadView(request) {
-        const View = this.views[request.resource];
+        const View = this.views[request.view];
         let newChild;
         console.dir(this.oldChild);
         if (View.prototype instanceof HTMLElement){
