@@ -1,4 +1,5 @@
 import * as clientFactory from '../components/ApiClientFactory.js';
+import SpinningButton from '../components/SpinningButton.js';
 import {html, render} from 'lit-html';
 
 export default class ItemView extends HTMLElement {
@@ -66,16 +67,20 @@ export default class ItemView extends HTMLElement {
           `
         )}
         </table>
-        <button @click=${_ => this.save()}>Save</button>
+        <spinning-button id='saveBtn' @click=${_ => this.save()}></spinning-button>
         `;
     }
 
     save(){
+        this.toggleSaveButton();
         if(this.verb === 'edit'){
             console.log('edit');
             clientFactory.apiClient().then(client => {
                 client.partialUpdate(this.resource, this.data['ID'], this.changedData);
-            });
+            }).then(_ => {
+                this.toggleSaveButton();
+            }
+            );
         }
         else if(this.verb === 'add'){
             console.log('add');
@@ -84,12 +89,19 @@ export default class ItemView extends HTMLElement {
             ]};
             clientFactory.apiClient().then(client => {
                 client.add(this.resource, newRecord);
-            });
+            }).then(_ => {
+                this.toggleSaveButton();
+            }
+            );
         }
     }
 
     inputChanged(e,field){
         this.changedData[field] = e.target.value;
+    }
+
+    toggleSaveButton(){
+        this.root.getElementById('saveBtn').toggle();
     }
 }
 customElements.define('item-view', ItemView);
