@@ -85,7 +85,7 @@ export default class TableView extends HTMLElement {
     }
 
     onAction(action, id){
-        window.location.hash = "/Item/" + this.request.resource + "/" + (id ? id + '/' : '/') + action;
+        window.location.hash = "/Form/" + this.request.resource + "/" + (id ? id + '/' : '/') + action;
     }
 
     mapFieldNames(){

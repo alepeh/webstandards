@@ -3,6 +3,8 @@ import SchemaView from './views/SchemaView';
 import TableView from './views/TableView';
 import HomeView from './views/HomeView';
 import ItemView from './views/ItemView';
+import FormView from './views/FormView';
+
 
 export default class VanillaSlot extends HTMLElement {
 
@@ -15,6 +17,7 @@ export default class VanillaSlot extends HTMLElement {
             'Schema' : SchemaView,
             'Table' : TableView,
             'Item' : ItemView,
+            'Form' : FormView,
         }
     }
 
