@@ -21,8 +21,11 @@ export default class FormView extends HTMLElement {
             @import url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css");
             @import url("//cdn.jsdelivr.net/npm/alpaca@1.5.27/dist/alpaca/bootstrap/alpaca.min.css");
         </style>
+        <input id="btnSer" type="button" value="Serialze"></input>
+        <div id="alpa"></div>
         `;
         this.fetchDataFromBackend(this.resource, this.id);
+        this.root.getElementById("btnSer").addEventListener('click', _ => this.serialize());
     }
 
     async fetchDataFromBackend(name, id){
@@ -47,9 +50,31 @@ export default class FormView extends HTMLElement {
     }
 
     render(){
-        $(this.root).alpaca({
+        $(this.root.getElementById("alpa")).alpaca({
             "schema": converter.convertDreamfactoryToAlpacaSchema(this.schema),
-            "data": converter.convertDreamFactoryDataToAlpacaData(this.data)
+            "data": converter.convertDreamFactoryDataToAlpacaData(this.data),
+            "options": {
+                "fields" : {
+                    "SORTIERUNG" : {
+                        "events": {
+                            "mouseover": function() {
+                                console.log(this.name + ": mouseover");
+                            },
+                    }
+                }
+                },
+                "form": {
+                    "buttons": {
+                        "serialize": {
+                            "title": "Serialize",
+                            "click": function() {
+                                var value = this.getValue();
+                                console.log(this.name + ": ser");
+                            }
+                        }
+                    }
+                }
+            }
         });
     }
 
@@ -84,6 +109,11 @@ export default class FormView extends HTMLElement {
 
     toggleSaveButton(){
         this.root.getElementById('saveBtn').toggle();
+    }
+
+    serialize(){
+        let value = $(this.root.getElementById("alpa")).alpaca().getValue();
+        console.log(value);
     }
 }
 customElements.define('form-view', FormView);
