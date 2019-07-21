@@ -21,17 +21,21 @@ export default class FormView extends HTMLElement {
             @import url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css");
             @import url("//cdn.jsdelivr.net/npm/alpaca@1.5.27/dist/alpaca/bootstrap/alpaca.min.css");
         </style>
-        <input id="btnSer" type="button" value="Serialze"></input>
         <div id="alpa"></div>
+        <spinning-button class='btn btn-primary' id='saveBtn'></spinning-button>
+        <div class='btn btn-primary' id='serBtn'>Log Value</div>
         `;
         this.fetchDataFromBackend(this.resource, this.id);
-        this.root.getElementById("btnSer").addEventListener('click', _ => this.serialize());
+        this.root.getElementById("saveBtn").addEventListener('click', _ => this.save());
+        this.root.getElementById("serBtn").addEventListener('click', _ => this.serialize());
     }
 
     async fetchDataFromBackend(name, id){
         await clientFactory.apiClient().then(client => {
             client.fetchResourceSchema(name)
             .then((schema) => {
+                console.log("Schema:")
+                console.dir(schema);
                 this.schema = schema;
             })
             .then(_ => {
@@ -53,37 +57,16 @@ export default class FormView extends HTMLElement {
         $(this.root.getElementById("alpa")).alpaca({
             "schema": converter.convertDreamfactoryToAlpacaSchema(this.schema),
             "data": converter.convertDreamFactoryDataToAlpacaData(this.data),
-            "options": {
-                "fields" : {
-                    "SORTIERUNG" : {
-                        "events": {
-                            "mouseover": function() {
-                                console.log(this.name + ": mouseover");
-                            },
-                    }
-                }
-                },
-                "form": {
-                    "buttons": {
-                        "serialize": {
-                            "title": "Serialize",
-                            "click": function() {
-                                var value = this.getValue();
-                                console.log(this.name + ": ser");
-                            }
-                        }
-                    }
-                }
-            }
         });
     }
 
     save(){
+        let formData = $(this.root.getElementById("alpa")).alpaca().getValue();
         this.toggleSaveButton();
         if(this.verb === 'edit'){
             console.log('edit');
             clientFactory.apiClient().then(client => {
-                client.partialUpdate(this.resource, this.data['ID'], this.changedData);
+                client.partialUpdate(this.resource, this.data['ID'], formData);
             }).then(_ => {
                 this.toggleSaveButton();
             }
@@ -92,7 +75,7 @@ export default class FormView extends HTMLElement {
         else if(this.verb === 'add'){
             console.log('add');
             let newRecord = {"resource" : [
-                this.changedData
+                formData
             ]};
             clientFactory.apiClient().then(client => {
                 client.add(this.resource, newRecord);
@@ -103,17 +86,14 @@ export default class FormView extends HTMLElement {
         }
     }
 
-    inputChanged(e,field){
-        this.changedData[field] = e.target.value;
-    }
-
     toggleSaveButton(){
         this.root.getElementById('saveBtn').toggle();
     }
 
     serialize(){
         let value = $(this.root.getElementById("alpa")).alpaca().getValue();
-        console.log(value);
+        console.log("Serialized form data");
+        console.dir(value);
     }
 }
 customElements.define('form-view', FormView);

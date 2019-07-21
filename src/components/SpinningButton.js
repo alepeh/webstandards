@@ -54,7 +54,7 @@ export default class SpinningButton extends HTMLElement {
     template(buttonText){
         console.log("Is disabled: " + this.disabled);
         return html`
-            <button ?disabled="${this.disabled}">${buttonText}</button>
+            <div ?disabled="${this.disabled}">${buttonText}</div>
         `;
     }
 }

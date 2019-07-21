@@ -26,7 +26,6 @@ function convertDreamfactoryToAlpacaSchema(dfSchema){
 function toYesNo(element){
     return {
         "title" : element.name,
-        "enum" : [true, false],
         "required" : element.required
     };
 }
