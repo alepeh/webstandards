@@ -11,7 +11,7 @@
   },
   "author": "Alexander Pehm",
   "dependencies": {
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "lit-html": "^1.0.0-rc.2"
   },
   "devDependencies": {
